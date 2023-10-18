@@ -1,0 +1,24 @@
+import path from "path";
+import { buildConfig } from "payload/config";
+import { mongooseAdapter } from "@payloadcms/db-mongodb";
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { webpackBundler } from "@payloadcms/bundler-webpack";
+import Users from "./collections/Users";
+import { Pages } from "./collections/Pages";
+import { Posts } from "./collections/Posts";
+import Categories from "./collections/Categories";
+
+export default buildConfig({
+  admin: {
+    bundler: webpackBundler(), // or viteBundler()
+  },
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URI!,
+  }),
+  editor: lexicalEditor({}),
+  collections: [Users, Pages, Posts, Categories],
+  globals: [],
+  typescript: {
+    outputFile: path.resolve(__dirname, "./payload-types.ts"),
+  },
+});
